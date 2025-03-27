@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.TupianDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.tupian_name as tupianName
+        ,a.tupian_uuid_number as tupianUuidNumber
+        ,a.tupian_photo as tupianPhoto
+        ,a.tupian_file as tupianFile
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.tupian_types as tupianTypes
+        ,a.tupian_erji_types as tupianErjiTypes
+        ,a.tupian_clicknum as tupianClicknum
+        ,a.tupian_content as tupianContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.tupian_delete as tupianDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.TupianView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM tupian  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.tupianName != '' and params.tupianName != null and params.tupianName != 'null' ">
+                and a.tupian_name like CONCAT('%',#{params.tupianName},'%')
+            </if>
+            <if test=" params.tupianUuidNumber != '' and params.tupianUuidNumber != null and params.tupianUuidNumber != 'null' ">
+                and a.tupian_uuid_number like CONCAT('%',#{params.tupianUuidNumber},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.tupianTypes != null and params.tupianTypes != ''">
+                and a.tupian_types = #{params.tupianTypes}
+            </if>
+            <if test="params.tupianErjiTypes != null and params.tupianErjiTypes != ''">
+                and a.tupian_erji_types = #{params.tupianErjiTypes}
+            </if>
+            <if test="params.tupianClicknumStart != null and params.tupianClicknumStart != ''">
+                <![CDATA[  and a.tupian_clicknum >= #{params.tupianClicknumStart}   ]]>
+            </if>
+            <if test="params.tupianClicknumEnd != null and params.tupianClicknumEnd != ''">
+                <![CDATA[  and a.tupian_clicknum <= #{params.tupianClicknumEnd}   ]]>
+            </if>
+             <if test="params.tupianClicknum != null and params.tupianClicknum != ''">
+                and a.tupian_clicknum = #{params.tupianClicknum}
+             </if>
+            <if test=" params.tupianContent != '' and params.tupianContent != null and params.tupianContent != 'null' ">
+                and a.tupian_content like CONCAT('%',#{params.tupianContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.tupianDeleteStart != null and params.tupianDeleteStart != ''">
+                <![CDATA[  and a.tupian_delete >= #{params.tupianDeleteStart}   ]]>
+            </if>
+            <if test="params.tupianDeleteEnd != null and params.tupianDeleteEnd != ''">
+                <![CDATA[  and a.tupian_delete <= #{params.tupianDeleteEnd}   ]]>
+            </if>
+             <if test="params.tupianDelete != null and params.tupianDelete != ''">
+                and a.tupian_delete = #{params.tupianDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
